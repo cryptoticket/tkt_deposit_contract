@@ -54,7 +54,7 @@ module.exports = {
         },
 
         production: {
-            provider: () => new HDWalletProvider('',''),
+            provider: () => new HDWalletProvider('', ''),
             network_id: '1515',
             gas: 500000000,
             gasPrice: 1
