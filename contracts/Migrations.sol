@@ -1,5 +1,6 @@
 pragma solidity ^0.6.0;
 
+
 contract Migrations {
 	address public owner;
 	uint public lastCompletedMigration;
