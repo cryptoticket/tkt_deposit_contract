@@ -3,6 +3,10 @@ pragma solidity ^0.6.0;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 
+/**
+ * @author crypto.tickets team
+ * @title crypto.tickets Deposit contract to lock TKT tokens stake in the mainnet
+ */
 contract Deposit {
 // fields:
 	address public addressCT = address(0x0);
@@ -26,32 +30,61 @@ contract Deposit {
 		depositAmount = _depositAmount;
 	}
 
+	/**
+	 * @dev Change ERC20 token for stake.
+	 * @param _newToken New token address
+	 */
 	function setToken( ERC20 _newToken ) external onlyCT() {
 		token = _newToken;
 	}
 
+	/**
+	 * @dev Change deposit amount. WILL NOT release tokens!
+	 * @param _depositAmount New value.
+	 */
 	function setDepositAmount( uint _depositAmount ) external onlyCT() {
 		depositAmount = _depositAmount;
 	}
 
+	/**
+	 * @dev Send TKTs from _a to this contract (if _a approved proper amount)
+	 * @param _a Client address
+	 */
 	function depositTokensOf(address _a) external onlyCT {
 		_depositTokens(_a);
 	}
 
+	/**
+	 * @dev Release TKTs from this contract to _a
+	 * @param _a Client address
+	 */
 	function releaseTokensOf(address _a) external onlyCT {
 		_releaseTokensOf(_a);
 	}
 
+	/**
+	 * @dev Release _a's TKTs from this contract to address _b
+	 * @param _a Client address (that deposited tokens)
+	 * @param _b Address to send tokens to
+	 */
 	function releaseTokensOfTo(address _a, address _b) external onlyCT {
 		_releaseTokensOfTo(_a, _b);
 	}
 
+	/**
+	 * @dev Release ALL deposited tokens to address _a
+	 * @param _a Destination address
+	 */
 	function releaseAllTokensTo(address _a) external onlyCT() {
 		// then all structures are in bad state...
-		uint total = token.balanceOf(address(this));		
-		token.transfer(_a, total);	
+		uint total = token.balanceOf(address(this));
+		token.transfer(_a, total);
 	}
 
+	/**
+	 * @dev Check whether _user has enough tokens
+	 * @param _user Address to check
+	 */
 	function isDepositedEnough( address _user ) external view returns(bool) {
 		// investor deposited enought tokens?
 		// depositAmount can be changed since then
@@ -59,11 +92,16 @@ contract Deposit {
 	}
 
 // 2 - Investors:
+	/**
+	 * @dev Send TKTs from me to this contract (i should approve it before)
+	 */
 	function depositTokens() external {
 		_depositTokens(msg.sender);
 	}
 
-	// release all tokens from current contract to owner
+	/**
+	 * @dev Release all my tokens from this contract BACK TO ME
+	 */
 	function releaseMyTokens() external {
 		_releaseTokensOf(msg.sender);
 	}
@@ -116,7 +154,7 @@ contract Deposit {
 		// clear balance
 		currentBalances[_a] = 0;
 
-		// TODO: SafeMath?
+		// No SafeMath required
 		require(totalDeposits>=balance, "Bad totalDeposits");
 		totalDeposits-=balance;
 	}
