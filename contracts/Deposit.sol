@@ -1,33 +1,34 @@
 pragma solidity ^0.6.0;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/upgrades/contracts/Initializable.sol";
 
 
 /**
  * @author crypto.tickets team
  * @title crypto.tickets Deposit contract to lock TKT tokens stake in the mainnet
  */
-contract Deposit {
+contract Deposit is Initializable {
 // fields:
-	address public addressCT = address(0x0);
+	address public addressCT;
 	ERC20 public token;
-	uint public depositAmount = 0;
+	uint public depositAmount;
 	mapping(address=>uint) public currentBalances;
-
-	uint public totalDeposits = 0;
-
+	uint public totalDeposits;
 	mapping(uint=>address) public allHolders;
-	uint public holdersMaxCount = 0;
+	uint public holdersMaxCount;
 
 // modifiers:
 	modifier onlyCT() {require(msg.sender == addressCT, "Access restricted"); _;}
 
 // methods:
 // 1 - CT
-	constructor ( address _addressCT, ERC20 _token, uint _depositAmount ) public {
+	function initialize( address _addressCT, ERC20 _token, uint _depositAmount ) public initializer {
 		addressCT = _addressCT;
 		token = _token;
 		depositAmount = _depositAmount;
+		totalDeposits = 0;
+		holdersMaxCount = 0;
 	}
 
 	/**

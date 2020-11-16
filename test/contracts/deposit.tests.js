@@ -3,6 +3,8 @@ const BigNumber = web3.BigNumber;
 const MintableToken = artifacts.require('MintableToken');
 const Deposit = artifacts.require('Deposit');
 
+const { deployProxy } = require('@openzeppelin/truffle-upgrades');
+
 require('chai')
     .use(require('chai-as-promised'))
     .use(require('chai-bignumber')(BigNumber))
@@ -24,7 +26,7 @@ contract('Deposit', (accounts) => {
 
         describe('contract constructor', () => {
             it('should construct new contract instance', async function () {
-                this.deposit = await Deposit.new(creator, this.erc20.address, 15000);
+                this.deposit = await deployProxy(Deposit, [creator, this.erc20.address, 15000]);
 
                 assert.equal(await this.deposit.addressCT(), creator);
                 assert.equal(await this.deposit.token(), this.erc20.address);
@@ -36,7 +38,7 @@ contract('Deposit', (accounts) => {
 
         describe('setToken', () => {
             it('should not update token address if called by someone', async function () {
-                this.deposit = await Deposit.new(creator, this.erc20.address, 15000);
+                this.deposit = await deployProxy(Deposit, [creator, this.erc20.address, 15000]);
 
                 // init new token
                 this.erc20_2 = await MintableToken.new();
@@ -47,12 +49,12 @@ contract('Deposit', (accounts) => {
 
         describe('setDepositAmount', () => {
             it('should return value passed in constructor', async function () {
-                this.deposit = await Deposit.new(creator, this.erc20.address, 15000);
+                this.deposit = await deployProxy(Deposit, [creator, this.erc20.address, 15000]);
                 assert.equal(await this.deposit.depositAmount(), 15000);
             });
 
             it('should return last value', async function () {
-                this.deposit = await Deposit.new(creator, this.erc20.address, 15000);
+                this.deposit = await deployProxy(Deposit, [creator, this.erc20.address, 15000]);
                 await this.deposit.setDepositAmount(12000);
                 assert.equal(await this.deposit.depositAmount(), 12000);
             });
@@ -60,7 +62,7 @@ contract('Deposit', (accounts) => {
 
         describe('isDepositedEnough', () => {
             it('should return false for new user', async function () {
-                this.deposit = await Deposit.new(creator, this.erc20.address, 10000);
+                this.deposit = await deployProxy(Deposit, [creator, this.erc20.address, 15000]);
 
                 assert.equal(await this.deposit.isDepositedEnough(creator), false);
                 assert.equal(await this.deposit.isDepositedEnough(acc1), false);
@@ -72,7 +74,7 @@ contract('Deposit', (accounts) => {
                 assert.equal(await this.erc20.balanceOf(acc1), 10000);
 
                 // allow
-                this.deposit = await Deposit.new(creator, this.erc20.address, 10000);
+                this.deposit = await deployProxy(Deposit, [creator, this.erc20.address, 10000]);
                 await this.erc20.approve(this.deposit.address, 10000, { from: acc1 });
                 assert.equal(await this.erc20.allowance(acc1, this.deposit.address), 10000);
 
@@ -87,7 +89,7 @@ contract('Deposit', (accounts) => {
                 assert.equal(await this.erc20.balanceOf(acc1), 10000);
 
                 // allow
-                this.deposit = await Deposit.new(creator, this.erc20.address, 10000);
+                this.deposit = await deployProxy(Deposit, [creator, this.erc20.address, 10000]);
                 await this.erc20.approve(this.deposit.address, 10000, { from: acc1 });
                 assert.equal(await this.erc20.allowance(acc1, this.deposit.address), 10000);
 
@@ -107,7 +109,7 @@ contract('Deposit', (accounts) => {
                 assert.equal(await this.erc20.balanceOf(acc1), 10000);
 
                 // allow
-                this.deposit = await Deposit.new(creator, this.erc20.address, 10000);
+                this.deposit = await deployProxy(Deposit, [creator, this.erc20.address, 10000]);
                 await this.erc20.approve(this.deposit.address, 10000, { from: acc1 });
                 assert.equal(await this.erc20.allowance(acc1, this.deposit.address), 10000);
 
@@ -130,7 +132,7 @@ contract('Deposit', (accounts) => {
                 await this.erc20.mintFor(acc1, 9000);
 
                 // allow
-                this.deposit = await Deposit.new(creator, this.erc20.address, 10000);
+                this.deposit = await deployProxy(Deposit, [creator, this.erc20.address, 10000]);
                 await this.erc20.approve(this.deposit.address, 900, { from: acc1 });
 
                 // now call 'depositTokens'
@@ -142,7 +144,7 @@ contract('Deposit', (accounts) => {
                 await this.erc20.mintFor(acc1, 10000);
 
                 // approve
-                this.deposit = await Deposit.new(creator, this.erc20.address, 10000);
+                this.deposit = await deployProxy(Deposit, [creator, this.erc20.address, 10000]);
                 await this.erc20.approve(this.deposit.address, 10000, { from: acc1 });
 
                 // now call 'depositTokens'
@@ -175,7 +177,7 @@ contract('Deposit', (accounts) => {
                 await this.erc20.mintFor(acc1, 10000);
 
                 // approve
-                this.deposit = await Deposit.new(creator, this.erc20.address, 10000);
+                this.deposit = await deployProxy(Deposit, [creator, this.erc20.address, 10000]);
                 await this.erc20.approve(this.deposit.address, 10000, { from: acc1 });
 
                 // now call 'depositTokens'
@@ -209,7 +211,7 @@ contract('Deposit', (accounts) => {
                 await this.erc20.mintFor(acc1, 10000);
 
                 // approve
-                this.deposit = await Deposit.new(creator, this.erc20.address, 10000);
+                this.deposit = await deployProxy(Deposit, [creator, this.erc20.address, 10000]);
                 await this.erc20.approve(this.deposit.address, 10000, { from: acc1 });
 
                 // now call 'depositTokens'
@@ -243,7 +245,7 @@ contract('Deposit', (accounts) => {
                 await this.erc20.mintFor(acc1, 10000);
 
                 // approve
-                this.deposit = await Deposit.new(creator, this.erc20.address, 10000);
+                this.deposit = await deployProxy(Deposit, [creator, this.erc20.address, 10000]);
                 await this.erc20.approve(this.deposit.address, 10000, { from: acc1 });
 
                 // now call 'depositTokens'
@@ -270,7 +272,7 @@ contract('Deposit', (accounts) => {
 
         describe('releaseMyTokens', () => {
             it('should fail if nothing to release', async function () {
-                this.deposit = await Deposit.new(creator, this.erc20.address, 10000);
+                this.deposit = await deployProxy(Deposit, [creator, this.erc20.address, 10000]);
                 await this.erc20.approve(this.deposit.address, 10000, { from: acc1 });
                 assert.equal(await this.erc20.allowance(acc1, this.deposit.address), 10000);
 
@@ -287,7 +289,7 @@ contract('Deposit', (accounts) => {
                 assert.equal(await this.erc20.balanceOf(acc1), 10000);
 
                 // allow
-                this.deposit = await Deposit.new(creator, this.erc20.address, 10000);
+                this.deposit = await deployProxy(Deposit, [creator, this.erc20.address, 10000]);
                 await this.erc20.approve(this.deposit.address, 10000, { from: acc1 });
                 assert.equal(await this.erc20.allowance(acc1, this.deposit.address), 10000);
 
@@ -307,7 +309,7 @@ contract('Deposit', (accounts) => {
                 assert.equal(await this.erc20.balanceOf(acc1), 10000);
 
                 // allow
-                this.deposit = await Deposit.new(creator, this.erc20.address, 10000);
+                this.deposit = await deployProxy(Deposit, [creator, this.erc20.address, 10000]);
                 await this.erc20.approve(this.deposit.address, 10000, { from: acc1 });
                 assert.equal(await this.erc20.allowance(acc1, this.deposit.address), 10000);
 
@@ -334,7 +336,7 @@ contract('Deposit', (accounts) => {
                 assert.equal(await this.erc20.balanceOf(acc1), 10000);
 
                 // allow
-                this.deposit = await Deposit.new(creator, this.erc20.address, 10000);
+                this.deposit = await deployProxy(Deposit, [creator, this.erc20.address, 10000]);
                 await this.erc20.approve(this.deposit.address, 10000, { from: acc1 });
                 assert.equal(await this.erc20.allowance(acc1, this.deposit.address), 10000);
 
@@ -352,7 +354,7 @@ contract('Deposit', (accounts) => {
 
         describe('releaseTokensOf', () => {
             it('should fail if nothing to release', async function () {
-                this.deposit = await Deposit.new(creator, this.erc20.address, 10000);
+                this.deposit = await deployProxy(Deposit, [creator, this.erc20.address, 10000]);
                 await this.erc20.approve(this.deposit.address, 10000, { from: acc1 });
                 assert.equal(await this.erc20.allowance(acc1, this.deposit.address), 10000);
 
@@ -369,7 +371,7 @@ contract('Deposit', (accounts) => {
                 assert.equal(await this.erc20.balanceOf(acc1), 10000);
 
                 // allow
-                this.deposit = await Deposit.new(creator, this.erc20.address, 10000);
+                this.deposit = await deployProxy(Deposit, [creator, this.erc20.address, 10000]);
                 await this.erc20.approve(this.deposit.address, 10000, { from: acc1 });
                 assert.equal(await this.erc20.allowance(acc1, this.deposit.address), 10000);
 
@@ -396,7 +398,7 @@ contract('Deposit', (accounts) => {
                 assert.equal(await this.erc20.balanceOf(acc1), 10000);
 
                 // allow
-                this.deposit = await Deposit.new(creator, this.erc20.address, 10000);
+                this.deposit = await deployProxy(Deposit, [creator, this.erc20.address, 10000]);
                 await this.erc20.approve(this.deposit.address, 10000, { from: acc1 });
                 assert.equal(await this.erc20.allowance(acc1, this.deposit.address), 10000);
 
@@ -420,7 +422,7 @@ contract('Deposit', (accounts) => {
                 assert.equal(await this.erc20.balanceOf(acc1), 10000);
 
                 // allow
-                this.deposit = await Deposit.new(creator, this.erc20.address, 10000);
+                this.deposit = await deployProxy(Deposit, [creator, this.erc20.address, 10000]);
                 await this.erc20.approve(this.deposit.address, 10000, { from: acc1 });
                 assert.equal(await this.erc20.allowance(acc1, this.deposit.address), 10000);
 
@@ -443,7 +445,7 @@ contract('Deposit', (accounts) => {
                 assert.equal(await this.erc20.balanceOf(acc1), 10000);
 
                 // allow
-                this.deposit = await Deposit.new(creator, this.erc20.address, 10000);
+                this.deposit = await deployProxy(Deposit, [creator, this.erc20.address, 10000]);
                 await this.erc20.approve(this.deposit.address, 10000, { from: acc1 });
                 assert.equal(await this.erc20.allowance(acc1, this.deposit.address), 10000);
 
@@ -462,7 +464,7 @@ contract('Deposit', (accounts) => {
             it('should return 2 for two different stakes', async function () {
                 // 1
                 await this.erc20.mintFor(acc1, 10000);
-                this.deposit = await Deposit.new(creator, this.erc20.address, 10000);
+                this.deposit = await deployProxy(Deposit, [creator, this.erc20.address, 10000]);
                 await this.erc20.approve(this.deposit.address, 10000, { from: acc1 });
                 await this.deposit.depositTokens({ from: acc1 }).should.be.fulfilled;
 
@@ -479,7 +481,7 @@ contract('Deposit', (accounts) => {
             it('should return 2 for two different stakes OF THE SAME USER', async function () {
                 // 1
                 await this.erc20.mintFor(acc1, 10000);
-                this.deposit = await Deposit.new(creator, this.erc20.address, 10000);
+                this.deposit = await deployProxy(Deposit, [creator, this.erc20.address, 10000]);
                 await this.erc20.approve(this.deposit.address, 10000, { from: acc1 });
                 await this.deposit.depositTokens({ from: acc1 }).should.be.fulfilled;
 
@@ -503,7 +505,7 @@ contract('Deposit', (accounts) => {
             it('should return 1 event if released', async function () {
                 // mint
                 await this.erc20.mintFor(acc1, 10000);
-                this.deposit = await Deposit.new(creator, this.erc20.address, 10000);
+                this.deposit = await deployProxy(Deposit, [creator, this.erc20.address, 10000]);
                 await this.erc20.approve(this.deposit.address, 10000, { from: acc1 });
 
                 // now call 'depositTokens'
@@ -525,7 +527,7 @@ contract('Deposit', (accounts) => {
             it('should return 10000 if stake is only one', async function () {
                 // mint
                 await this.erc20.mintFor(acc1, 10000);
-                this.deposit = await Deposit.new(creator, this.erc20.address, 10000);
+                this.deposit = await deployProxy(Deposit, [creator, this.erc20.address, 10000]);
                 await this.erc20.approve(this.deposit.address, 10000, { from: acc1 });
                 await this.deposit.depositTokens({ from: acc1 }).should.be.fulfilled;
                 const td = await this.deposit.totalDeposits();
@@ -535,7 +537,7 @@ contract('Deposit', (accounts) => {
             it('should return 20000 for two different stakes', async function () {
                 // 1
                 await this.erc20.mintFor(acc1, 10000);
-                this.deposit = await Deposit.new(creator, this.erc20.address, 10000);
+                this.deposit = await deployProxy(Deposit, [creator, this.erc20.address, 10000]);
                 await this.erc20.approve(this.deposit.address, 10000, { from: acc1 });
                 await this.deposit.depositTokens({ from: acc1 }).should.be.fulfilled;
 
@@ -552,7 +554,7 @@ contract('Deposit', (accounts) => {
             it('should return 15000 for 2 deposits OF THE SAME USER', async function () {
                 // 1
                 await this.erc20.mintFor(acc1, 10000);
-                this.deposit = await Deposit.new(creator, this.erc20.address, 10000);
+                this.deposit = await deployProxy(Deposit, [creator, this.erc20.address, 10000]);
                 await this.erc20.approve(this.deposit.address, 10000, { from: acc1 });
                 await this.deposit.depositTokens({ from: acc1 }).should.be.fulfilled;
 
@@ -571,7 +573,7 @@ contract('Deposit', (accounts) => {
             it('should return 0 if released', async function () {
                 // mint
                 await this.erc20.mintFor(acc1, 10000);
-                this.deposit = await Deposit.new(creator, this.erc20.address, 10000);
+                this.deposit = await deployProxy(Deposit, [creator, this.erc20.address, 10000]);
                 await this.erc20.approve(this.deposit.address, 10000, { from: acc1 });
 
                 // now call 'depositTokens'
@@ -593,7 +595,7 @@ contract('Deposit', (accounts) => {
                 assert.equal(await this.erc20.balanceOf(acc1), 10000);
 
                 // allow
-                this.deposit = await Deposit.new(creator, this.erc20.address, 10000);
+                this.deposit = await deployProxy(Deposit, [creator, this.erc20.address, 10000]);
                 await this.erc20.approve(this.deposit.address, 10000, { from: acc1 });
                 assert.equal(await this.erc20.allowance(acc1, this.deposit.address), 10000);
 
@@ -610,7 +612,7 @@ contract('Deposit', (accounts) => {
                 assert.equal(await this.erc20.balanceOf(acc1), 10000);
 
                 // allow
-                this.deposit = await Deposit.new(creator, this.erc20.address, 10000);
+                this.deposit = await deployProxy(Deposit, [creator, this.erc20.address, 10000]);
                 await this.erc20.approve(this.deposit.address, 10000, { from: acc1 });
                 assert.equal(await this.erc20.allowance(acc1, this.deposit.address), 10000);
 
@@ -634,7 +636,7 @@ contract('Deposit', (accounts) => {
                 // mint
                 await this.erc20.mintFor(acc1, 10000);
                 // allow
-                this.deposit = await Deposit.new(creator, this.erc20.address, 10000);
+                this.deposit = await deployProxy(Deposit, [creator, this.erc20.address, 10000]);
                 await this.erc20.approve(this.deposit.address, 10000, { from: acc1 });
                 // now call 'depositTokens'
                 await this.deposit.depositTokensOf(acc1, { from: creator }).should.be.fulfilled;

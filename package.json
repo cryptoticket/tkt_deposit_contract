@@ -40,6 +40,7 @@
   },
   "dependencies": {
     "@openzeppelin/contracts": "^3.2.0",
+    "@openzeppelin/upgrades": "^2.8.0",
     "babel-eslint": "^10.0.3",
     "babel-polyfill": "^6.26.0",
     "babel-register": "^6.26.0",
@@ -71,24 +72,25 @@
   },
   "devDependencies": {
     "@commitlint/cli": "^7.2.1",
+    "@openzeppelin/truffle-upgrades": "^1.2.2",
     "commitizen": "^3.0.5",
     "cz-customizable": "^5.3.0",
-    "husky": "^1.2.1",
-    "memory-cache": "^0.2.0",
-    "solium": "^1.1.8",
     "eslint": "^6.8.0",
-    "eslint-config-standard": "^10.2.1",
-    "eslint-plugin-import": "^2.18.2",
-    "eslint-plugin-node": "^5.2.1",
-    "eslint-plugin-promise": "^3.8.0",
-    "eslint-plugin-standard": "^3.1.0",
     "eslint-config-prettier": "^3.1.0",
+    "eslint-config-standard": "^10.2.1",
     "eslint-plugin-babel": "^5.2.1",
     "eslint-plugin-flowtype": "^2.50.3",
+    "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-jest": "^21.24.1",
     "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-node": "^5.2.1",
     "eslint-plugin-prettier": "^3.0.0",
-    "eslint-plugin-react": "^7.14.3"
+    "eslint-plugin-promise": "^3.8.0",
+    "eslint-plugin-react": "^7.14.3",
+    "eslint-plugin-standard": "^3.1.0",
+    "husky": "^1.2.1",
+    "memory-cache": "^0.2.0",
+    "solium": "^1.1.8"
   },
   "jest": {
     "coverageReporters": [

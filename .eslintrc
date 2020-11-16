@@ -57,6 +57,7 @@
 			"node_modules/",
 			"scripts/old/",
 			"scripts/performance_tests/",
-		  "coverage"
+		  "coverage",
+			"migrations"
 		],
 }
