@@ -115,30 +115,25 @@ contract Deposit is Initializable {
 
 		// 2 - if investor already deposited N tokens before
 		// 2.1  - and if 'depositAmount' increased -> require K=M-N more tokens
-		uint neededMore = 0;
-		if (depositAmount>=balance) {
-			neededMore = depositAmount - balance;
-		} else {
-			// 2.2  - and if 'depositAmount' decreased -> DO NOT unlock excess tokens!
-			return;
-		}
+		require(depositAmount>=balance);
+		uint neededMore = depositAmount - balance;
 
 		// 3 - if not enough -> fail
 		require(allow >= neededMore, "Need more tokens");
 
-		// 4 - withdraw
-		token.transferFrom(_a, address(this), neededMore);
-
-		// 5 - update currentBalances
+		// 4 - update currentBalances
 		currentBalances[_a]+=neededMore;
 
-		// 6 - increase holders count
+		// 5 - increase holders count
 		// do not check if this holder already present
 		allHolders[holdersMaxCount] = _a;
 		holdersMaxCount++;
 
-		// 7 - increase totalDeposits
+		// 6 - increase totalDeposits
 		totalDeposits+=neededMore;
+
+		// 7 - withdraw
+		token.transferFrom(_a, address(this), neededMore);
 	}
 
 	function _releaseTokensOf(address _a) internal {
@@ -149,14 +144,15 @@ contract Deposit is Initializable {
 		uint balance = currentBalances[_a];
 		require(balance!=0,"No tokens to release");
 
-		// send tokens to '_to'
-		token.transfer(_to, balance);
-
 		// clear balance
 		currentBalances[_a] = 0;
 
 		// No SafeMath required
+		// just an extra consistency check
 		require(totalDeposits>=balance, "Bad totalDeposits");
 		totalDeposits-=balance;
+
+		// send tokens to '_to'
+		token.transfer(_to, balance);
 	}
 }

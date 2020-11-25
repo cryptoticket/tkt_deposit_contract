@@ -259,7 +259,7 @@ contract('Deposit', (accounts) => {
                 await this.deposit.setDepositAmount(7000);
 
                 // 3 - call deposit
-                await this.deposit.depositTokens({ from: acc1 }).should.be.fulfilled;
+                await this.deposit.depositTokens({ from: acc1 }).should.be.rejectedWith('revert');
                 assert.equal(await this.erc20.balanceOf(acc1), 0);
                 assert.equal(await this.erc20.balanceOf(this.deposit.address), 10000);
                 assert.equal(await this.erc20.allowance(acc1, this.deposit.address), 0);
