@@ -1,7 +1,7 @@
 {
   "name": "cryptoticketsstaking",
   "version": "1.0.0",
-  "description": "TKT Staking contracts",
+  "description": "TKT Staking contract",
   "main": "index.js",
   "scripts": {
     "commit": "./node_modules/.bin/git-cz",
@@ -16,14 +16,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cryptoticket/CryptoTicketsStaking.git"
+    "url": "git+https://github.com/cryptoticket/tkt_deposit_contract.git"
   },
-  "author": "Anton Akentiev",
+  "author": "crypto.tickets team",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/cryptoticket/CryptoTicketsStaking/issues"
+    "url": "https://github.com/cryptoticket/tkt_deposit_contract/issues"
   },
-  "homepage": "https://github.com/cryptoticket/CryptoTicketsStaking#readme",
+  "homepage": "https://github.com/cryptoticket/tkt_deposit_contract#readme",
   "husky": {
     "hooks": {
       "pre-commit": "npm run lint",

@@ -23,7 +23,7 @@ contract Deposit is Initializable {
 
 // methods:
 // 1 - CT
-	function initialize( address _addressCT, ERC20 _token, uint _depositAmount ) public initializer {
+	function initialize(address _addressCT, ERC20 _token, uint _depositAmount) public initializer {
 		addressCT = _addressCT;
 		token = _token;
 		depositAmount = _depositAmount;
@@ -35,7 +35,7 @@ contract Deposit is Initializable {
 	 * @dev Change ERC20 token for stake.
 	 * @param _newToken New token address
 	 */
-	function setToken( ERC20 _newToken ) external onlyCT() {
+	function setToken(ERC20 _newToken) external onlyCT() {
 		token = _newToken;
 	}
 
@@ -43,7 +43,7 @@ contract Deposit is Initializable {
 	 * @dev Change deposit amount. WILL NOT release tokens!
 	 * @param _depositAmount New value.
 	 */
-	function setDepositAmount( uint _depositAmount ) external onlyCT() {
+	function setDepositAmount(uint _depositAmount) external onlyCT() {
 		depositAmount = _depositAmount;
 	}
 
@@ -86,7 +86,7 @@ contract Deposit is Initializable {
 	 * @dev Check whether _user has enough tokens
 	 * @param _user Address to check
 	 */
-	function isDepositedEnough( address _user ) external view returns(bool) {
+	function isDepositedEnough(address _user) external view returns(bool) {
 		// investor deposited enought tokens?
 		// depositAmount can be changed since then
 		return (currentBalances[_user]>=depositAmount);
@@ -115,7 +115,7 @@ contract Deposit is Initializable {
 
 		// 2 - if investor already deposited N tokens before
 		// 2.1  - and if 'depositAmount' increased -> require K=M-N more tokens
-		require(depositAmount>=balance);
+		require(depositAmount>=balance, "Already staked enough");
 		uint neededMore = depositAmount - balance;
 
 		// 3 - if not enough -> fail
