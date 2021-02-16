@@ -64,7 +64,7 @@
     "solc": "^0.5.3",
     "solidity-coverage": "^0.7.9",
     "supertest": "^3.3.0",
-    "systeminformation": "^4.26.4",
+    "systeminformation": "^5.3.1",
     "truffle": "^5.1.52",
     "truffle-hdwallet-provider": "^1.0.5",
     "web3": "^1.2.8",
